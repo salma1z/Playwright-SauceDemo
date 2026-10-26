@@ -1,30 +1,29 @@
 import{ test, expect} from '@playwright/test';
 import { LoginPage } from '../Pages/LoginPage';
+import loginData from '../Test_Data/loginData.json';
 
 
-test('login test',async({page}) =>{
+test('Valid login test',async({page}) =>{
 
   const loginPage= new LoginPage(page);
   await loginPage.gotoLoginPage();
-  await loginPage.login('standard_user','secret_sauce');
-  await loginPage.verifyLoginSuccess();
-/*
-test.describe('login test',()=>{
+  //await loginPage.login('standard_user','secret_sauce');
+  await loginPage.login(loginData.valid_user.username,
+                        loginData.valid_user.password
+  );
+  await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
+});
 
-  let loginPage: LoginPage;
+test('Invalid login test',async({page}) =>{
 
-test.beforeEach(async ({page})=>{
-
-    loginPage = new LoginPage(page);
-    await loginPage.goto('https://www.saucedemo.com');
+  const loginPage= new LoginPage(page);
+  await loginPage.gotoLoginPage();
+  //await loginPage.login('standard_user','secret_sauce');
+  await loginPage.login(loginData.invalid_user.username,
+                        loginData.invalid_user.password
+  );
+  await expect(loginPage.errorMessage).toHaveText('Epic sadface: Sorry, this user has been locked out.');
 });
 
 
-test('login with correct username &Password', async({page})=>{
-await loginPage.login('standard_user','secret_sauce');
-await expect(page).toHaveURL(/inventory\.html/);
 
-
-});*/
-
-});
